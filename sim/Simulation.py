@@ -1,5 +1,7 @@
 import simpy
 from typing import Callable
+import numpy as np
+
 
 from .Generator import Generator
 from .NodeManager import NodeManager
@@ -27,11 +29,12 @@ class Simulation:
     def print(self):
         nodes = self._nodeManager.getNodes()
         for node in nodes.values():
-            print(node.servedNum, node.getNumWaiting())
+            print("Served Request: ", node.servedNum, "| Still waiting: ", node.getNumWaiting())
 
         print("TOTAL REQUEST: ", self._dataCollection.request["TotalRequest"])
         print("TOTAL COMPLETED REQUEST: ", self._dataCollection.request["NumCompleted"])
         print("TOTAL REJECTED REQUEST: ", self._dataCollection.request["NumRejected"])
+        print("MEAN RESPONSE TIME: ", np.mean(self._dataCollection.request["ResponseTime"]))
 
     def run(self, until):
         self.env.run(until=until)

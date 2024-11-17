@@ -7,4 +7,4 @@ class DataCollection:
         self.request["NumCompleted"] = 0
         self.request["NumRejected"] = 0
         self.request["WaitingTime"] = []
-        self.request["ResponseTime"] = []
+        self.request["ResponseTime"] = []   
