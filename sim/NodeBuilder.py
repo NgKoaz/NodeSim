@@ -13,7 +13,7 @@ class NodeBuilder:
         nodes = {nodeId: Node(env, nodeId, numResource, queueLength, getServiceTime) for (nodeId, numResource, queueLength, getServiceTime) in self._nodes.values()}
         for (startNodeId, endNodeId, prob) in self._edges:
             startNode = nodes[startNodeId]
-            endNode = nodes[endNodeId]
+            endNode = nodes.get(endNodeId, None)
             startNode.connect(endNode, prob)
         return nodes
 
