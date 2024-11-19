@@ -8,16 +8,14 @@ from .Node import Node
 
 # nodeManager: NodeManager, 
 class Generator:
-    def __init__(self, env: simpy.Environment,getInterArrivalTime: Callable, nodeStart: Node, dataCollection: DataCollection) -> None:
+    def __init__(self, env: simpy.Environment,getInterArrivalTime: Callable, nodeStart: Node) -> None:
         self.env = env
         self.nodeStart = nodeStart
         self._getInterArrivalTime = getInterArrivalTime
-        # Statistical Data
-        self.dataCollection = dataCollection
 
     def run(self): 
         while True:
-            newRequest = Request(self.env, self.nodeStart, self.dataCollection)
+            newRequest = Request(self.env, self.nodeStart)
             self.env.process(newRequest.run())
             yield self.env.timeout(self._getInterArrivalTime())
             

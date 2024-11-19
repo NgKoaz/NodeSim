@@ -6,28 +6,24 @@ from .DataCollection import DataCollection
 class Request:
     NextId = 0
 
-    def __init__(self, env: simpy.Environment, nodeStart: Node, dataCollection: DataCollection) -> None:
+    def __init__(self, env: simpy.Environment, nodeStart: Node) -> None:
         self.env = env
         self.currentNode = nodeStart
-        # Statistical Data
-        self.tempData = {}
-        self.dataCollection = dataCollection
-        self.dataCollection.request["TotalRequest"] += 1
 
     def run(self):
-        self.tempData["StartTime"] = self.env.now
-        while self.currentNode != None and not self.currentNode.isFull():
+        while self.currentNode != None:
+            self.currentNode.onRequestArrive()
+            if self.currentNode.isFull(): 
+                break
+            startWaitingTime = self.env.now
             with self.currentNode.getResources().request() as req:
+                self.currentNode.onRequestEnqueue()
                 yield req
-                mu = self.currentNode.getServiceTime()
-                yield self.env.timeout(mu) 
+                endWaitingTime = self.env.now
+                self.currentNode.onRequestDequeue()
+                yield self.env.timeout(self.currentNode.getServiceTime()) 
+                
+            self.currentNode.onRequestLeave()
 
-            self.currentNode.onRequestDone()
+            DataCollection.getInstance().recordWaitingTime(self.currentNode.getNodeId(), endWaitingTime - startWaitingTime)
             self.currentNode = self.currentNode.nextNode()
-
-        self.tempData["EndTime"] = self.env.now
-        if self.currentNode == None:
-            self.dataCollection.request["ResponseTime"].append(self.tempData["EndTime"] - self.tempData["StartTime"])
-            self.dataCollection.request["NumCompleted"] += 1
-        else:
-            self.dataCollection.request["NumRejected"] += 1
