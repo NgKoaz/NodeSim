@@ -22,8 +22,8 @@ class Request:
                 endWaitingTime = self.env.now
                 self.currentNode.onRequestDequeue()
                 yield self.env.timeout(self.currentNode.getServiceTime()) 
-                
             self.currentNode.onRequestLeave()
 
             DataCollection.getInstance().recordWaitingTime(self.currentNode.getNodeId(), endWaitingTime - startWaitingTime)
             self.currentNode = self.currentNode.nextNode()
+        DataCollection.getInstance().onRequestLeaveSystem()

@@ -16,7 +16,9 @@ class DataCollection:
 
     def __init__(self):
         self.dataList = {}
+        self.totalRequestLeaveSystem = 0
         self.totalSimDuration = 1
+
 
     @staticmethod
     def getInstance():
@@ -49,7 +51,13 @@ class DataCollection:
 
     def recordTotalSimulationDuration(self, totalSimDuration: float) -> None:
         self.totalSimDuration = totalSimDuration
-        
+
+    def onRequestLeaveSystem(self) -> None:
+        self.totalRequestLeaveSystem += 1
+
+    def getTotalRequestLeaveSystem(self) -> int:
+        return self.totalRequestLeaveSystem
+
     def getNodeNameList(self) -> List[str]:
         return self.dataList.keys()
     

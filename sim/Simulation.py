@@ -12,6 +12,11 @@ class Simulation:
         self.env = simpy.Environment()
         self._nodeManager = NodeManager(self.env, nodeBuilder)
         self._generator = Generator(self.env, getInterArrivalTime, self.getNodeStart(nodeIdStart))
+        
+        nodes =  self._nodeManager.getNodes()
+        for key in nodes.keys():
+            nodes[key].printAllEdges()
+
         self._prepare()
 
     def getNodeStart(self, nodeIdStart: str):

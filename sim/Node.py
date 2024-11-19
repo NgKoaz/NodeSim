@@ -1,5 +1,5 @@
 import simpy
-import random
+import numpy as np
 from typing import Callable, Optional
 from .DataCollection import DataCollection
 
@@ -30,8 +30,8 @@ class Node:
     def isFull(self): 
         return self._queueLength <= self.getNumWaiting()
 
-    def nextNode(self) -> Optional['Node']:
-        randNum = random.random()
+    def nextNode(self):
+        randNum = np.random.random()
         floor = 0
         for (node, prob) in self._network:
             if floor <= randNum and randNum <= floor + prob:
